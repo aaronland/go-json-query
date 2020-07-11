@@ -1,6 +1,7 @@
 package query
 
 import (
+	"context"
 	"github.com/tidwall/gjson"
 	"regexp"
 )
@@ -18,8 +19,15 @@ type Query struct {
 	Match *regexp.Regexp
 }
 
-func Matches(body []byte, qs QuerySet) (bool, error) {
+func Matches(ctx context.Context, qs QuerySet, body []byte) (bool, error) {
 
+	select {
+	case <- ctx.Done():
+		return false, nil
+	default:
+		// pass
+	}
+		
 	queries := qs.Queries
 	mode := qs.Mode
 
