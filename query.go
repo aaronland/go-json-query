@@ -19,7 +19,7 @@ type Query struct {
 	Match *regexp.Regexp
 }
 
-func Matches(ctx context.Context, qs QuerySet, body []byte) (bool, error) {
+func Matches(ctx context.Context, qs *QuerySet, body []byte) (bool, error) {
 
 	select {
 	case <- ctx.Done():
