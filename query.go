@@ -57,6 +57,11 @@ func Matches(ctx context.Context, qs *QuerySet, body []byte) (bool, error) {
 				}
 			}
 		}
+
+		if mode == QUERYSET_MODE_ANY && matches > 0 {
+			break
+		}
+		
 	}
 
 	if mode == QUERYSET_MODE_ALL {
