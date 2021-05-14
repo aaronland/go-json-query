@@ -1,24 +1,13 @@
-# go-json-query
+// Read one or more files and test whether their contents match one or more query parameters.
+package main
 
-Go package for querying and filter JSON documents using tidwall/gjson-style paths and regular expressions for testing values.
-
-## Documentation
-
-[![Go Reference](https://pkg.go.dev/badge/github.com/aaronland/go-json-query.svg)](https://pkg.go.dev/github.com/aaronland/go-json-query)
-
-## Important
-
-Documentation is incomplete.
-
-## Example
-
-```
 import (
 	"context"
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-json-query"
 	"io"
+	"log"
 	"os"
 	"strings"
 )
@@ -33,9 +22,20 @@ func main() {
 
 	query_mode := flag.String("query-mode", query.QUERYSET_MODE_ALL, desc_modes)
 
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage:\n")
+		fmt.Fprintf(os.Stderr, "  %s [options] [path1 path2 ... pathN]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Options:\n")
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 
 	paths := flag.Args()
+
+	if len(queries) == 0 {
+		log.Fatalf("Nothing to query!")
+	}
 
 	qs := &query.QuerySet{
 		Queries: queries,
@@ -46,18 +46,26 @@ func main() {
 
 	for _, path := range paths {
 
-		fh, _ := os.Open(path)
+		fh, err := os.Open(path)
+
+		if err != nil {
+			log.Fatalf("Failed to open '%s', %v", path, err)
+		}
+
 		defer fh.Close()
 
-		body, _ := io.ReadAll(fh)
+		body, err := io.ReadAll(fh)
 
-		matches, _ := query.Matches(ctx, qs, body)
+		if err != nil {
+			log.Fatalf("Failed to read '%s', %v", path, err)
+		}
+
+		matches, err := query.Matches(ctx, qs, body)
+
+		if err != nil {
+			log.Fatalf("Failed to query '%s', %v", path, err)
+		}
 
 		fmt.Printf("%s\t%t\n", path, matches)
 	}
 }
-```
-
-## See also
-
-* https://github.com/tidwall/gjson
