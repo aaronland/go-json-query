@@ -1,25 +1,25 @@
 package query
 
 import (
-	"testing"
 	"context"
+	"testing"
 )
 
 func TestMatches(t *testing.T) {
 
 	ctx := context.Background()
-	
+
 	doc := []byte(`{"properties": { "wof:placetype": "campus" }`)
-	
+
 	flags := []string{
 		"properties.wof:placetype=campus",
 		"properties.wof:placetype=locality",
 	}
-	
+
 	qf := new(QueryFlags)
 
 	for _, fl := range flags {
-		
+
 		err := qf.Set(fl)
 
 		if err != nil {
@@ -29,7 +29,7 @@ func TestMatches(t *testing.T) {
 
 	qs := &QuerySet{
 		Queries: *qf,
-		Mode: "ANY",
+		Mode:    "ANY",
 	}
 
 	matches, err := Matches(ctx, qs, doc)
@@ -44,7 +44,7 @@ func TestMatches(t *testing.T) {
 
 	qs2 := &QuerySet{
 		Queries: *qf,
-		Mode: "ALL",
+		Mode:    "ALL",
 	}
 
 	matches2, err := Matches(ctx, qs2, doc)
@@ -56,5 +56,5 @@ func TestMatches(t *testing.T) {
 	if matches2 {
 		t.Fatalf("Invalid match in ALL mode")
 	}
-	
+
 }
