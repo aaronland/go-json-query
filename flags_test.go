@@ -10,11 +10,11 @@ func TestQueryFlags(t *testing.T) {
 		"properties.wof:placetype=campus",
 		"properties.mz_is_current=^(1|0)$",
 	}
-	
+
 	qf := new(QueryFlags)
 
 	for _, f := range ok_flags {
-		
+
 		err := qf.Set(f)
 
 		if err != nil {
