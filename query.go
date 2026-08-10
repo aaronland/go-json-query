@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"regexp"
 
-	"github.com/tidwall/gjson"	
+	"github.com/tidwall/gjson"
 )
 
 // QUERYSET_MODE_ANY is a flag to signal that only one match in a QuerySet needs to be successful.
@@ -99,7 +99,7 @@ func Matches(ctx context.Context, qs *QuerySet, body []byte) (bool, error) {
 
 		if mode == QUERYSET_MODE_ANY && matches > 0 {
 			logger.Debug("Matches is > 0 and query mode is any, BREAK")
-			break
+			return true, nil
 		}
 	}
 
