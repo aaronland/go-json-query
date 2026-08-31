@@ -2,12 +2,15 @@ package query
 
 import (
 	"context"
+	"log/slog"
 	"testing"
 )
 
 func TestMatches(t *testing.T) {
 
 	ctx := context.Background()
+
+	slog.SetLogLoggerLevel(LevelTrace)
 
 	doc := []byte(`{"properties": { "wof:placetype": "campus" }`)
 
